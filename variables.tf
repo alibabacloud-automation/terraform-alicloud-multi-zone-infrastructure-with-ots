@@ -1,25 +1,4 @@
-variable "region" {
-  description = "(Deprecated from version 1.1.0) The region used to launch this module resources."
-  type        = string
-  default     = ""
-}
 
-variable "profile" {
-  description = "(Deprecated from version 1.1.0) The profile name as set in the shared credentials file. If not set, it will be sourced from the ALICLOUD_PROFILE environment variable."
-  type        = string
-  default     = ""
-}
-variable "shared_credentials_file" {
-  description = "(Deprecated from version 1.1.0) This is the path to the shared credentials file. If this is not set and a profile is specified, $HOME/.aliyun/config.json will be used."
-  type        = string
-  default     = ""
-}
-
-variable "skip_region_validation" {
-  description = "(Deprecated from version 1.1.0) Skip static validation of region ID. Used by users of alternative AlibabaCloud-like APIs or users w/ access to regions that are not public (yet)."
-  type        = bool
-  default     = false
-}
 
 #################
 # VPC
@@ -82,6 +61,7 @@ variable "availability_zones" {
 
 variable "vswitch_name" {
   description = "The vswitch name prefix used to launch several new vswitches."
+  type        = string
   default     = "tf-multi-zone-infrastructure-with-ots"
 }
 
@@ -488,25 +468,35 @@ variable "create_rds_instance" {
 variable "rds_engine" {
   description = "RDS Database type. Value options: MySQL, SQLServer, PostgreSQL, and PPAS"
   default     = "MySQL"
+  type        = string
 }
 
 variable "rds_engine_version" {
   description = "RDS Database version. Value options can refer to the latest docs [CreateDBInstance](https://www.alibabacloud.com/help/doc-detail/26228.htm) `EngineVersion`"
   default     = "5.7"
+  type        = string
 }
 
 variable "rds_instance_name" {
   description = "The name of DB instance."
+  type        = string
   default     = "tf-multi-zone-infrastructure-with-ots"
 }
 variable "rds_instance_charge_type" {
   description = "The instance charge type. Valid values: Prepaid and Postpaid. Default to Postpaid."
+  type        = string
   default     = "Postpaid"
 }
 variable "rds_period" {
   description = "The duration that you will buy DB instance (in month). It is valid when instance_charge_type is PrePaid. Valid values: [1~9], 12, 24, 36. Default to 1"
   type        = number
   default     = 1
+}
+
+variable "rds_instance_storage_type" {
+  description = "The storage type of DB instance."
+  type        = string
+  default     = "local_ssd"
 }
 
 variable "rds_instance_storage" {
@@ -517,6 +507,7 @@ variable "rds_instance_storage" {
 
 variable "rds_instance_type" {
   description = "DB Instance type, for example: mysql.n1.micro.1. full list is : https://www.alibabacloud.com/help/zh/doc-detail/26312.htm"
+  type        = string
   default     = ""
 }
 
@@ -543,7 +534,7 @@ variable "rds_tags" {
 variable "rds_preferred_backup_period" {
   description = "DB Instance backup period."
   type        = list(string)
-  default     = []
+  default     = ["Wednesday"]
 }
 
 variable "rds_preferred_backup_time" {
@@ -600,20 +591,24 @@ variable "create_rds_account" {
 }
 variable "rds_account_name" {
   description = "Name of a new database account. It should be set when create_rds_account = true."
+  type        = string
   default     = ""
 }
 variable "rds_password" {
   description = "Operation database account password. It may consist of letters, digits, or underlines, with a length of 6 to 32 characters."
+  type        = string
   default     = ""
 }
 
 variable "rds_account_type" {
   description = "Privilege type of account. Normal: Common privilege. Super: High privilege.Default to Normal."
+  type        = string
   default     = "Normal"
 }
 
 variable "rds_account_privilege" {
   description = "The privilege of one account access database."
+  type        = string
   default     = "ReadOnly"
 }
 
