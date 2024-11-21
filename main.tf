@@ -1,21 +1,20 @@
 locals {
-  create_vpc         = var.use_existing_vpc ? false : var.create_vpc
-  create_others      = var.use_existing_vpc || var.create_vpc
-  this_vpc_id        = var.use_existing_vpc ? var.existing_vpc_id : module.vpc.this_vpc_id
-  availability_zones = length(var.availability_zones) > 0 ? var.availability_zones : data.alicloud_zones.multi.zones.0.multi_zone_ids
+  create_vpc                    = var.use_existing_vpc ? false : var.create_vpc
+  this_vpc_id                   = var.use_existing_vpc ? var.existing_vpc_id : module.vpc.this_vpc_id
+  availability_zones            = length(var.availability_zones) > 0 ? var.availability_zones : data.alicloud_db_zones.multi.zones[0].multi_zone_ids
+  db_zones_instance_charge_type = var.rds_instance_charge_type == "Postpaid" ? "PostPaid" : (var.rds_instance_charge_type == "Prepaid" ? "PrePaid" : var.rds_instance_charge_type)
 }
 
-data "alicloud_zones" "multi" {
-  available_resource_creation = "Rds"
-  multi                       = true
+data "alicloud_db_zones" "multi" {
+  engine               = var.rds_engine
+  engine_version       = var.rds_engine_version
+  instance_charge_type = local.db_zones_instance_charge_type
+  multi_zone           = true
 }
 
 module "vpc" {
-  source                  = "alibaba/vpc/alicloud"
-  profile                 = var.profile
-  shared_credentials_file = var.shared_credentials_file
-  region                  = var.region
-  skip_region_validation  = var.skip_region_validation
+  source  = "alibaba/vpc/alicloud"
+  version = "1.11.0"
 
   vpc_id          = var.existing_vpc_id
   create          = local.create_vpc
@@ -33,17 +32,16 @@ module "vpc" {
 }
 
 module "nat" {
-  source                  = "terraform-alicloud-modules/nat-gateway/alicloud"
-  profile                 = var.profile
-  shared_credentials_file = var.shared_credentials_file
-  region                  = var.region
-  skip_region_validation  = var.skip_region_validation
+  source  = "terraform-alicloud-modules/nat-gateway/alicloud"
+  version = "1.5.0"
+
 
   ########################
   # New Nat gateway parameters
   ########################
   create               = var.create_nat
   vpc_id               = local.this_vpc_id
+  vswitch_id           = module.vpc.this_vswitch_ids[0]
   name                 = var.nat_name
   specification        = var.nat_specification
   instance_charge_type = var.nat_instance_charge_type
@@ -64,11 +62,8 @@ module "nat" {
 }
 
 module "snat" {
-  source                  = "terraform-alicloud-modules/snat/alicloud"
-  profile                 = var.profile
-  shared_credentials_file = var.shared_credentials_file
-  region                  = var.region
-  skip_region_validation  = var.skip_region_validation
+  source  = "terraform-alicloud-modules/snat/alicloud"
+  version = "2.2.0"
 
   create        = true
   snat_table_id = module.nat.this_snat_table_id
@@ -76,22 +71,19 @@ module "snat" {
   # Open for vswitch ids
   snat_with_vswitch_ids = [
     {
-      vswitch_ids = concat(module.vpc.this_vswitch_ids, [""])[0]
-      snat_ip     = concat(module.nat.this_eip_ips, [""])[0]
+      vswitch_ids = [module.vpc.this_vswitch_ids[0]]
+      snat_ip     = module.nat.this_eip_ips[0]
     },
     {
-      vswitch_ids = concat(module.vpc.this_vswitch_ids, ["", ""])[1]
-      snat_ip     = concat(module.nat.this_eip_ips, ["", ""])[1]
+      vswitch_ids = [module.vpc.this_vswitch_ids[1]]
+      snat_ip     = module.nat.this_eip_ips[1]
     }
   ]
 }
 
 module "security_group" {
-  source                  = "alibaba/security-group/alicloud"
-  profile                 = var.profile
-  shared_credentials_file = var.shared_credentials_file
-  region                  = var.region
-  skip_region_validation  = var.skip_region_validation
+  source  = "alibaba/security-group/alicloud"
+  version = "2.4.0"
 
   # alicloud_security_group
   create      = var.create_security_group
@@ -137,24 +129,20 @@ data "alicloud_instance_types" "zone_a" {
   availability_zone = local.availability_zones[0]
 }
 data "alicloud_instance_types" "zone_b" {
-  cpu_core_count = 1
-  memory_size    = 2
-
+  cpu_core_count    = 1
+  memory_size       = 2
   availability_zone = local.availability_zones[1]
 }
 
 module "ecs_zone_a" {
-  source                  = "alibaba/ecs-instance/alicloud"
-  profile                 = var.profile
-  shared_credentials_file = var.shared_credentials_file
-  region                  = var.region
-  skip_region_validation  = var.skip_region_validation
+  source  = "alibaba/ecs-instance/alicloud"
+  version = "2.12.0"
 
   # Ecs instance variables
   number_of_instances           = var.number_of_zone_a_instances
   use_num_suffix                = true
   image_id                      = var.ecs_image_id
-  instance_type                 = var.ecs_instance_type == "" ? data.alicloud_instance_types.zone_a.ids.0 : var.ecs_instance_type
+  instance_type                 = var.ecs_instance_type == "" ? data.alicloud_instance_types.zone_a.ids[0] : var.ecs_instance_type
   credit_specification          = var.ecs_credit_specification
   security_group_ids            = [module.security_group.this_security_group_id]
   name                          = var.ecs_instance_name
@@ -181,17 +169,14 @@ module "ecs_zone_a" {
 }
 
 module "ecs_zone_b" {
-  source                  = "alibaba/ecs-instance/alicloud"
-  profile                 = var.profile
-  shared_credentials_file = var.shared_credentials_file
-  region                  = var.region
-  skip_region_validation  = var.skip_region_validation
+  source  = "alibaba/ecs-instance/alicloud"
+  version = "2.12.0"
 
   # Ecs instance variables
   number_of_instances           = var.number_of_zone_b_instances
   use_num_suffix                = true
   image_id                      = var.ecs_image_id
-  instance_type                 = var.ecs_instance_type == "" ? data.alicloud_instance_types.zone_b.ids.0 : var.ecs_instance_type
+  instance_type                 = var.ecs_instance_type == "" ? data.alicloud_instance_types.zone_b.ids[0] : var.ecs_instance_type
   credit_specification          = var.ecs_credit_specification
   security_group_ids            = [module.security_group.this_security_group_id]
   name                          = var.ecs_instance_name
@@ -218,11 +203,8 @@ module "ecs_zone_b" {
 }
 
 module "slb" {
-  source                  = "alibaba/slb/alicloud"
-  profile                 = var.profile
-  shared_credentials_file = var.shared_credentials_file
-  region                  = var.region
-  skip_region_validation  = var.skip_region_validation
+  source  = "alibaba/slb/alicloud"
+  version = "2.1.0"
 
   create               = var.create_slb
   name                 = var.slb_name
@@ -233,19 +215,16 @@ module "slb" {
 }
 
 data "alicloud_db_instance_classes" "default" {
-  engine         = var.rds_engine
-  engine_version = var.rds_engine_version
-  //  category       = "Basic"
-  multi_zone = true
-  //  storage_type   = var.rds_instance_storage_type
+  zone_id                  = data.alicloud_db_zones.multi.zones[0].id
+  engine                   = var.rds_engine
+  engine_version           = var.rds_engine_version
+  db_instance_storage_type = var.rds_instance_storage_type
+  multi_zone               = true
 }
 
 module "rds" {
-  source                  = "terraform-alicloud-modules/rds/alicloud"
-  profile                 = var.profile
-  shared_credentials_file = var.shared_credentials_file
-  region                  = var.region
-  skip_region_validation  = var.skip_region_validation
+  source  = "terraform-alicloud-modules/rds/alicloud"
+  version = "2.5.0"
 
   create_instance        = var.create_rds_instance
   engine                 = var.rds_engine
@@ -253,9 +232,11 @@ module "rds" {
   instance_name          = var.rds_instance_name
   instance_charge_type   = var.rds_instance_charge_type
   period                 = var.rds_period
-  instance_storage       = var.rds_instance_storage
-  instance_type          = var.rds_instance_type != "" ? var.rds_instance_type : data.alicloud_db_instance_classes.default.instance_classes.0.instance_class
+  instance_storage_type  = var.rds_instance_storage_type
+  instance_storage       = var.rds_instance_type != "" ? var.rds_instance_storage : data.alicloud_db_instance_classes.default.instance_classes[0].storage_range.min
+  instance_type          = var.rds_instance_type != "" ? var.rds_instance_type : data.alicloud_db_instance_classes.default.instance_classes[0].instance_class
   vpc_security_group_ids = var.rds_security_group_ids
+  vswitch_id             = module.vpc.vswitch_ids[0]
   security_ips           = var.rds_security_ips
   tags                   = merge(var.rds_tags, var.tags)
 
@@ -292,11 +273,8 @@ module "rds" {
 }
 
 module "ots" {
-  source                  = "terraform-alicloud-modules/table-store/alicloud"
-  profile                 = var.profile
-  shared_credentials_file = var.shared_credentials_file
-  region                  = var.region
-  skip_region_validation  = var.skip_region_validation
+  source  = "terraform-alicloud-modules/table-store/alicloud"
+  version = "1.2.0"
 
   create_instance = var.create_ots_instance
   instance_name   = var.ots_instance_name
