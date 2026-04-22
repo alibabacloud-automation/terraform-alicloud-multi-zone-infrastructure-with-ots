@@ -1,3 +1,14 @@
+## [3.0.0](https://github.com/alibabacloud-automation/terraform-alicloud-multi-zone-infrastructure-with-ots/compare/v2.0.0...v3.0.0) (2026-04-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* add provider version constraint for aliyun/alicloud
+
+### Features
+
+* add provider version constraint for aliyun/alicloud ([4781d2e](https://github.com/alibabacloud-automation/terraform-alicloud-multi-zone-infrastructure-with-ots/commit/4781d2effbac780c5478e5d22e1dae4c7daab296))
+
 ## 2.1.0 (Unreleased)
 ## 2.0.0 (November 21, 2024)
 
