@@ -163,35 +163,36 @@ More details see [How to use provider in the module](https://www.terraform.io/do
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
+| <a name="requirement_alicloud"></a> [alicloud](#requirement\_alicloud) | >= 1.200.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_alicloud"></a> [alicloud](#provider\_alicloud) | n/a |
+| <a name="provider_alicloud"></a> [alicloud](#provider\_alicloud) | >= 1.200.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_ecs_zone_a"></a> [ecs\_zone\_a](#module\_ecs\_zone\_a) | alibaba/ecs-instance/alicloud | 2.12.0 |
-| <a name="module_ecs_zone_b"></a> [ecs\_zone\_b](#module\_ecs\_zone\_b) | alibaba/ecs-instance/alicloud | 2.12.0 |
-| <a name="module_nat"></a> [nat](#module\_nat) | terraform-alicloud-modules/nat-gateway/alicloud | 1.5.0 |
-| <a name="module_ots"></a> [ots](#module\_ots) | terraform-alicloud-modules/table-store/alicloud | 1.2.0 |
-| <a name="module_rds"></a> [rds](#module\_rds) | terraform-alicloud-modules/rds/alicloud | 2.5.0 |
-| <a name="module_security_group"></a> [security\_group](#module\_security\_group) | alibaba/security-group/alicloud | 2.4.0 |
-| <a name="module_slb"></a> [slb](#module\_slb) | alibaba/slb/alicloud | 2.1.0 |
-| <a name="module_snat"></a> [snat](#module\_snat) | terraform-alicloud-modules/snat/alicloud | 2.2.0 |
-| <a name="module_vpc"></a> [vpc](#module\_vpc) | alibaba/vpc/alicloud | 1.11.0 |
+| <a name="module_ecs_zone_a"></a> [ecs\_zone\_a](#module\_ecs\_zone\_a) | alibaba/ecs-instance/alicloud | 4.0.0 |
+| <a name="module_ecs_zone_b"></a> [ecs\_zone\_b](#module\_ecs\_zone\_b) | alibaba/ecs-instance/alicloud | 4.0.0 |
+| <a name="module_nat"></a> [nat](#module\_nat) | terraform-alicloud-modules/nat-gateway/alicloud | 2.0.1 |
+| <a name="module_ots"></a> [ots](#module\_ots) | terraform-alicloud-modules/table-store/alicloud | 2.0.0 |
+| <a name="module_rds"></a> [rds](#module\_rds) | terraform-alicloud-modules/rds/alicloud | 3.0.0 |
+| <a name="module_security_group"></a> [security\_group](#module\_security\_group) | alibaba/security-group/alicloud | 3.0.0 |
+| <a name="module_slb"></a> [slb](#module\_slb) | alibaba/slb/alicloud | 3.0.1 |
+| <a name="module_snat"></a> [snat](#module\_snat) | terraform-alicloud-modules/snat/alicloud | 3.0.1 |
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | alibaba/vpc/alicloud | 2.0.0 |
 
 ## Resources
 
 | Name | Type |
 |------|------|
-| [alicloud_db_instance_classes.default](https://registry.terraform.io/providers/hashicorp/alicloud/latest/docs/data-sources/db_instance_classes) | data source |
-| [alicloud_instance_types.zone_a](https://registry.terraform.io/providers/hashicorp/alicloud/latest/docs/data-sources/instance_types) | data source |
-| [alicloud_instance_types.zone_b](https://registry.terraform.io/providers/hashicorp/alicloud/latest/docs/data-sources/instance_types) | data source |
-| [alicloud_zones.multi](https://registry.terraform.io/providers/hashicorp/alicloud/latest/docs/data-sources/zones) | data source |
+| [alicloud_db_instance_classes.default](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/data-sources/db_instance_classes) | data source |
+| [alicloud_db_zones.multi](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/data-sources/db_zones) | data source |
+| [alicloud_instance_types.zone_a](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/data-sources/instance_types) | data source |
+| [alicloud_instance_types.zone_b](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/data-sources/instance_types) | data source |
 
 ## Inputs
 
@@ -224,7 +225,7 @@ More details see [How to use provider in the module](https://www.terraform.io/do
 | <a name="input_ecs_security_enhancement_strategy"></a> [ecs\_security\_enhancement\_strategy](#input\_ecs\_security\_enhancement\_strategy) | The security enhancement strategy. | `string` | `"Active"` | no |
 | <a name="input_ecs_spot_price_limit"></a> [ecs\_spot\_price\_limit](#input\_ecs\_spot\_price\_limit) | The hourly price threshold of a instance, and it takes effect only when parameter 'spot\_strategy' is 'SpotWithPriceLimit'. Three decimals is allowed at most. | `number` | `0` | no |
 | <a name="input_ecs_spot_strategy"></a> [ecs\_spot\_strategy](#input\_ecs\_spot\_strategy) | The spot strategy of a Pay-As-You-Go instance, and it takes effect only when parameter `instance_charge_type` is 'PostPaid'. Value range: 'NoSpot': A regular Pay-As-You-Go instance. 'SpotWithPriceLimit': A price threshold for a spot instance. 'SpotAsPriceGo': A price that is based on the highest Pay-As-You-Go instance | `string` | `"NoSpot"` | no |
-| <a name="input_ecs_subscription"></a> [ecs\_subscription](#input\_ecs\_subscription) | A mapping of fields for Prepaid ECS instances created. | `map(string)` | <pre>{<br>  "auto_renew_period": 1,<br>  "include_data_disks": true,<br>  "period": 1,<br>  "period_unit": "Month",<br>  "renewal_status": "Normal"<br>}</pre> | no |
+| <a name="input_ecs_subscription"></a> [ecs\_subscription](#input\_ecs\_subscription) | A mapping of fields for Prepaid ECS instances created. | `map(string)` | <pre>{<br/>  "auto_renew_period": 1,<br/>  "include_data_disks": true,<br/>  "period": 1,<br/>  "period_unit": "Month",<br/>  "renewal_status": "Normal"<br/>}</pre> | no |
 | <a name="input_ecs_system_disk_category"></a> [ecs\_system\_disk\_category](#input\_ecs\_system\_disk\_category) | The system disk category used to launch one or more ecs instances. | `string` | `"cloud_efficiency"` | no |
 | <a name="input_ecs_system_disk_size"></a> [ecs\_system\_disk\_size](#input\_ecs\_system\_disk\_size) | The system disk size used to launch one or more ecs instances. | `number` | `40` | no |
 | <a name="input_ecs_tags"></a> [ecs\_tags](#input\_ecs\_tags) | A mapping of tags to assign to the ecs instances. | `map(string)` | `{}` | no |
@@ -262,7 +263,7 @@ More details see [How to use provider in the module](https://www.terraform.io/do
 | <a name="input_ots_instance_type"></a> [ots\_instance\_type](#input\_ots\_instance\_type) | The type of instance. Valid values: ["Capacity", "HighPerformance"]. | `string` | `"HighPerformance"` | no |
 | <a name="input_ots_table_max_version"></a> [ots\_table\_max\_version](#input\_ots\_table\_max\_version) | The maximum number of versions stored in this table. The valid value is 1-2147483647. | `number` | `1` | no |
 | <a name="input_ots_table_name"></a> [ots\_table\_name](#input\_ots\_table\_name) | (Required, ForceNew) The table name of the OTS instance. If changed, a new table would be created. | `string` | `""` | no |
-| <a name="input_ots_table_primary_key"></a> [ots\_table\_primary\_key](#input\_ots\_table\_primary\_key) | The property of TableMeta which indicates the structure information of a table. It describes the attribute value of primary key. The number of primary\_key should not be less than one and not be more than four. | <pre>list(object({<br>    name = string<br>    type = string<br>  }))</pre> | `[]` | no |
+| <a name="input_ots_table_primary_key"></a> [ots\_table\_primary\_key](#input\_ots\_table\_primary\_key) | The property of TableMeta which indicates the structure information of a table. It describes the attribute value of primary key. The number of primary\_key should not be less than one and not be more than four. | <pre>list(object({<br/>    name = string<br/>    type = string<br/>  }))</pre> | `[]` | no |
 | <a name="input_ots_table_time_to_live"></a> [ots\_table\_time\_to\_live](#input\_ots\_table\_time\_to\_live) | The retention time of data stored in this table (unit: second). The value maximum is 2147483647 and -1 means never expired. | `number` | `-1` | no |
 | <a name="input_ots_tags"></a> [ots\_tags](#input\_ots\_tags) | A mapping of tags to assign to the instance. | `map(string)` | `{}` | no |
 | <a name="input_priority_for_egress_rules"></a> [priority\_for\_egress\_rules](#input\_priority\_for\_egress\_rules) | A priority where 'egress\_rules' is used. Default to 'default\_egress\_priority'. | `number` | `1` | no |
@@ -281,14 +282,15 @@ More details see [How to use provider in the module](https://www.terraform.io/do
 | <a name="input_rds_instance_charge_type"></a> [rds\_instance\_charge\_type](#input\_rds\_instance\_charge\_type) | The instance charge type. Valid values: Prepaid and Postpaid. Default to Postpaid. | `string` | `"Postpaid"` | no |
 | <a name="input_rds_instance_name"></a> [rds\_instance\_name](#input\_rds\_instance\_name) | The name of DB instance. | `string` | `"tf-multi-zone-infrastructure-with-ots"` | no |
 | <a name="input_rds_instance_storage"></a> [rds\_instance\_storage](#input\_rds\_instance\_storage) | The storage capacity of the instance. Unit: GB. The storage capacity increases at increments of 5 GB. For more information, see [Instance Types](https://www.alibabacloud.com/help/doc-detail/26312.htm). | `number` | `20` | no |
+| <a name="input_rds_instance_storage_type"></a> [rds\_instance\_storage\_type](#input\_rds\_instance\_storage\_type) | The storage type of DB instance. | `string` | `"local_ssd"` | no |
 | <a name="input_rds_instance_type"></a> [rds\_instance\_type](#input\_rds\_instance\_type) | DB Instance type, for example: mysql.n1.micro.1. full list is : https://www.alibabacloud.com/help/zh/doc-detail/26312.htm | `string` | `""` | no |
 | <a name="input_rds_log_backup_retention_period"></a> [rds\_log\_backup\_retention\_period](#input\_rds\_log\_backup\_retention\_period) | Instance log backup retention days. Valid values: [7-730]. Default to 7. It can be larger than 'retention\_period'. | `number` | `7` | no |
 | <a name="input_rds_password"></a> [rds\_password](#input\_rds\_password) | Operation database account password. It may consist of letters, digits, or underlines, with a length of 6 to 32 characters. | `string` | `""` | no |
 | <a name="input_rds_period"></a> [rds\_period](#input\_rds\_period) | The duration that you will buy DB instance (in month). It is valid when instance\_charge\_type is PrePaid. Valid values: [1~9], 12, 24, 36. Default to 1 | `number` | `1` | no |
-| <a name="input_rds_preferred_backup_period"></a> [rds\_preferred\_backup\_period](#input\_rds\_preferred\_backup\_period) | DB Instance backup period. | `list(string)` | `[]` | no |
+| <a name="input_rds_preferred_backup_period"></a> [rds\_preferred\_backup\_period](#input\_rds\_preferred\_backup\_period) | DB Instance backup period. | `list(string)` | <pre>[<br/>  "Wednesday"<br/>]</pre> | no |
 | <a name="input_rds_preferred_backup_time"></a> [rds\_preferred\_backup\_time](#input\_rds\_preferred\_backup\_time) | DB instance backup time, in the format of HH:mmZ- HH:mmZ. | `string` | `"02:00Z-03:00Z"` | no |
 | <a name="input_rds_security_group_ids"></a> [rds\_security\_group\_ids](#input\_rds\_security\_group\_ids) | List of VPC security group ids to associate with rds instance. | `list(string)` | `[]` | no |
-| <a name="input_rds_security_ips"></a> [rds\_security\_ips](#input\_rds\_security\_ips) | List of IP addresses allowed to access all databases of an instance. The list contains up to 1,000 IP addresses, separated by commas. Supported formats include 0.0.0.0/0, 10.23.12.24 (IP), and 10.23.12.24/24 (Classless Inter-Domain Routing (CIDR) mode. /24 represents the length of the prefix in an IP address. The range of the prefix length is [1,32]). | `list(string)` | <pre>[<br>  "127.0.0.1"<br>]</pre> | no |
+| <a name="input_rds_security_ips"></a> [rds\_security\_ips](#input\_rds\_security\_ips) | List of IP addresses allowed to access all databases of an instance. The list contains up to 1,000 IP addresses, separated by commas. Supported formats include 0.0.0.0/0, 10.23.12.24 (IP), and 10.23.12.24/24 (Classless Inter-Domain Routing (CIDR) mode. /24 represents the length of the prefix in an IP address. The range of the prefix length is [1,32]). | `list(string)` | <pre>[<br/>  "127.0.0.1"<br/>]</pre> | no |
 | <a name="input_rds_tags"></a> [rds\_tags](#input\_rds\_tags) | A mapping of tags to assign to the rds instances. | `map(string)` | `{}` | no |
 | <a name="input_resource_group_id"></a> [resource\_group\_id](#input\_resource\_group\_id) | The Id of resource group which the instance belongs. | `string` | `""` | no |
 | <a name="input_security_group_name"></a> [security\_group\_name](#input\_security\_group\_name) | Name of security group. It is used to create a new security group. | `string` | `"tf-multi-zone-infrastructure-with-ots"` | no |
@@ -303,7 +305,7 @@ More details see [How to use provider in the module](https://www.terraform.io/do
 | <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | The cidr block used to launch a new vpc. | `string` | `"172.16.0.0/16"` | no |
 | <a name="input_vpc_name"></a> [vpc\_name](#input\_vpc\_name) | The vpc name used to launch a new vpc. | `string` | `"tf-multi-zone-infrastructure-with-ots"` | no |
 | <a name="input_vpc_tags"></a> [vpc\_tags](#input\_vpc\_tags) | The tags used to launch a new vpc. | `map(string)` | `{}` | no |
-| <a name="input_vswitch_cidrs"></a> [vswitch\_cidrs](#input\_vswitch\_cidrs) | List of cidr blocks used to launch several new vswitches. If not set, there is no new vswitches will be created. | `list(string)` | <pre>[<br>  "172.16.10.0/24",<br>  "172.16.20.0/24"<br>]</pre> | no |
+| <a name="input_vswitch_cidrs"></a> [vswitch\_cidrs](#input\_vswitch\_cidrs) | List of cidr blocks used to launch several new vswitches. If not set, there is no new vswitches will be created. | `list(string)` | <pre>[<br/>  "172.16.10.0/24",<br/>  "172.16.20.0/24"<br/>]</pre> | no |
 | <a name="input_vswitch_name"></a> [vswitch\_name](#input\_vswitch\_name) | The vswitch name prefix used to launch several new vswitches. | `string` | `"tf-multi-zone-infrastructure-with-ots"` | no |
 | <a name="input_vswitch_tags"></a> [vswitch\_tags](#input\_vswitch\_tags) | The tags used to launch serveral vswitches. | `map(string)` | `{}` | no |
 

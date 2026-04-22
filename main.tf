@@ -14,7 +14,7 @@ data "alicloud_db_zones" "multi" {
 
 module "vpc" {
   source  = "alibaba/vpc/alicloud"
-  version = "1.11.0"
+  version = "2.0.0"
 
   vpc_id          = var.existing_vpc_id
   create          = local.create_vpc
@@ -33,7 +33,7 @@ module "vpc" {
 
 module "nat" {
   source  = "terraform-alicloud-modules/nat-gateway/alicloud"
-  version = "1.5.0"
+  version = "2.0.1"
 
 
   ########################
@@ -63,7 +63,7 @@ module "nat" {
 
 module "snat" {
   source  = "terraform-alicloud-modules/snat/alicloud"
-  version = "2.2.0"
+  version = "3.0.1"
 
   create        = true
   snat_table_id = module.nat.this_snat_table_id
@@ -83,7 +83,7 @@ module "snat" {
 
 module "security_group" {
   source  = "alibaba/security-group/alicloud"
-  version = "2.4.0"
+  version = "3.0.0"
 
   # alicloud_security_group
   create      = var.create_security_group
@@ -136,7 +136,7 @@ data "alicloud_instance_types" "zone_b" {
 
 module "ecs_zone_a" {
   source  = "alibaba/ecs-instance/alicloud"
-  version = "2.12.0"
+  version = "4.0.0"
 
   # Ecs instance variables
   number_of_instances           = var.number_of_zone_a_instances
@@ -170,7 +170,7 @@ module "ecs_zone_a" {
 
 module "ecs_zone_b" {
   source  = "alibaba/ecs-instance/alicloud"
-  version = "2.12.0"
+  version = "4.0.0"
 
   # Ecs instance variables
   number_of_instances           = var.number_of_zone_b_instances
@@ -204,7 +204,7 @@ module "ecs_zone_b" {
 
 module "slb" {
   source  = "alibaba/slb/alicloud"
-  version = "2.1.0"
+  version = "3.0.1"
 
   create               = var.create_slb
   name                 = var.slb_name
@@ -224,7 +224,7 @@ data "alicloud_db_instance_classes" "default" {
 
 module "rds" {
   source  = "terraform-alicloud-modules/rds/alicloud"
-  version = "2.5.0"
+  version = "3.0.0"
 
   create_instance        = var.create_rds_instance
   engine                 = var.rds_engine
@@ -274,7 +274,7 @@ module "rds" {
 
 module "ots" {
   source  = "terraform-alicloud-modules/table-store/alicloud"
-  version = "1.2.0"
+  version = "2.0.0"
 
   create_instance = var.create_ots_instance
   instance_name   = var.ots_instance_name
