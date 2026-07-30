@@ -30,11 +30,12 @@ module "infrastructure" {
   slb_spec      = "slb.s1.small"
 
   # create rds instance
-  create_rds_instance = true
-  rds_engine          = "MySQL"
-  rds_engine_version  = "5.7"
-  rds_account_name    = "tfexamplename"
-  rds_password        = "Example1234"
+  create_rds_instance       = true
+  rds_engine                = "MySQL"
+  rds_engine_version        = "5.7"
+  rds_instance_storage_type = "cloud_essd"
+  rds_account_name          = "tfexamplename"
+  rds_password              = "Example1234"
   rds_databases = [
     {
       name          = "tf_example_db"
