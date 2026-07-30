@@ -34,6 +34,8 @@ module "infrastructure" {
   rds_engine                = "MySQL"
   rds_engine_version        = "5.7"
   rds_instance_storage_type = "cloud_essd"
+  rds_instance_storage      = 20
+  rds_instance_type         = "mysql.n2.medium.1"
   rds_account_name          = "tfexamplename"
   rds_password              = "Example1234"
   rds_databases = [
