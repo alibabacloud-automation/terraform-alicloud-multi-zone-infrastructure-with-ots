@@ -31,6 +31,7 @@ Create both VPC and Security group.
 ```hcl
 module "infrastructure" {
   source  = "terraform-alicloud-modules/multi-zone-infrastructure-with-ots/alicloud"
+  version = "4.0.0"
 
   # create vpc and vswitch resources
   create_vpc    = true
@@ -129,6 +130,7 @@ provider "alicloud" {
 }
 module "infrastructure" {
   source     = "terraform-alicloud-modules/multi-zone-infrastructure-with-ots/alicloud"
+  version    = "4.0.0"
   create_vpc = true
   vpc_name   = "my-env-vpc"
   // ...
@@ -144,6 +146,7 @@ provider "alicloud" {
 }
 module "infrastructure" {
   source     = "terraform-alicloud-modules/multi-zone-infrastructure-with-ots/alicloud"
+  version    = "4.0.0"
   providers  = {
     alicloud = alicloud.hz
   }
