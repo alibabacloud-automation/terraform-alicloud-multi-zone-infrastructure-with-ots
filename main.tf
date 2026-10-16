@@ -6,10 +6,12 @@ locals {
 }
 
 data "alicloud_db_zones" "multi" {
-  engine               = var.rds_engine
-  engine_version       = var.rds_engine_version
-  instance_charge_type = local.db_zones_instance_charge_type
-  multi_zone           = true
+  engine                   = var.rds_engine
+  engine_version           = var.rds_engine_version
+  instance_charge_type     = local.db_zones_instance_charge_type
+  category                 = "HighAvailability"
+  db_instance_storage_type = var.rds_instance_storage_type
+  multi_zone               = true
 }
 
 module "vpc" {
@@ -233,7 +235,7 @@ module "rds" {
   instance_charge_type   = var.rds_instance_charge_type
   period                 = var.rds_period
   instance_storage_type  = var.rds_instance_storage_type
-  instance_storage       = var.rds_instance_type != "" ? var.rds_instance_storage : data.alicloud_db_instance_classes.default.instance_classes[0].storage_range.min
+  instance_storage       = var.rds_instance_type != "" ? var.rds_instance_storage : data.alicloud_db_instance_classes.default.instance_classes[0].storage_range[0].min
   instance_type          = var.rds_instance_type != "" ? var.rds_instance_type : data.alicloud_db_instance_classes.default.instance_classes[0].instance_class
   vpc_security_group_ids = var.rds_security_group_ids
   vswitch_id             = module.vpc.vswitch_ids[0]
