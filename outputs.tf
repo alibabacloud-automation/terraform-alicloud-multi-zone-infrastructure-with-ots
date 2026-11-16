@@ -198,7 +198,7 @@ output "this_slb_ip_address" {
 }
 output "this_slb_tags" {
   description = "The tags of new slb."
-  value       = var.slb_tags
+  value       = var.create_slb ? concat(alicloud_slb.this[*].tags, [{}])[0] : {}
 }
 
 #################

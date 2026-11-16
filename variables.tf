@@ -450,6 +450,12 @@ variable "slb_spec" {
   default     = ""
 }
 
+variable "slb_instance_charge_type" {
+  description = "The SLB instance billing mode. Use PayByCLCU for new instances."
+  type        = string
+  default     = "PayByCLCU"
+}
+
 variable "slb_tags" {
   description = "A mapping of tags to assign to the slb instances."
   type        = map(string)

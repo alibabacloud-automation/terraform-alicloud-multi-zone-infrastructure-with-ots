@@ -204,7 +204,8 @@ resource "alicloud_slb" "this" {
   address_type         = "internet"
   internet_charge_type = var.slb_internet_charge_type
   bandwidth            = var.slb_bandwidth
-  instance_charge_type = "PayByCLCU"
+  instance_charge_type = var.slb_instance_charge_type
+  load_balancer_spec   = var.slb_instance_charge_type == "PayByCLCU" ? null : (var.slb_spec != "" ? var.slb_spec : null)
   tags                 = var.slb_tags
 }
 
