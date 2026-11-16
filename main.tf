@@ -233,6 +233,7 @@ module "rds" {
   create_instance        = var.create_rds_instance
   engine                 = var.rds_engine
   engine_version         = var.rds_engine_version
+  category               = "HighAvailability"
   instance_name          = var.rds_instance_name
   instance_charge_type   = var.rds_instance_charge_type
   period                 = var.rds_period

@@ -213,7 +213,7 @@ variable "ecs_image_id" {
 variable "ecs_instance_type" {
   description = "The instance type used to launch one or more ecs instances."
   type        = string
-  default     = "ecs.sn1ne.large"
+  default     = "ecs.g7.large"
 }
 
 variable "ecs_credit_specification" {
@@ -473,7 +473,7 @@ variable "rds_engine" {
 
 variable "rds_engine_version" {
   description = "RDS Database version. Value options can refer to the latest docs [CreateDBInstance](https://www.alibabacloud.com/help/doc-detail/26228.htm) `EngineVersion`"
-  default     = "5.7"
+  default     = "8.0"
   type        = string
 }
 
@@ -496,7 +496,7 @@ variable "rds_period" {
 variable "rds_instance_storage_type" {
   description = "The storage type of DB instance."
   type        = string
-  default     = "local_ssd"
+  default     = "cloud_essd"
 }
 
 variable "rds_instance_storage" {
