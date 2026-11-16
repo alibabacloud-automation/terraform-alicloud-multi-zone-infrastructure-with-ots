@@ -197,15 +197,14 @@ module "ecs_zone_b" {
   volume_tags                   = var.ecs_volume_tags
 }
 
-module "slb" {
-  source  = "alibaba/slb/alicloud"
-  version = "3.0.1"
+resource "alicloud_slb" "this" {
+  count = var.create_slb ? 1 : 0
 
-  create               = var.create_slb
-  name                 = var.slb_name
+  load_balancer_name   = var.slb_name
+  address_type         = "internet"
   internet_charge_type = var.slb_internet_charge_type
   bandwidth            = var.slb_bandwidth
-  spec                 = var.slb_spec
+  instance_charge_type = "PayByCLCU"
   tags                 = var.slb_tags
 }
 

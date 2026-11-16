@@ -184,21 +184,21 @@ output "this_eip_ips" {
 #################
 output "this_slb_id" {
   description = "The id of new slb."
-  value       = module.slb.this_slb_id
+  value       = concat(alicloud_slb.this[*].id, [""])[0]
 }
 
 output "this_slb_name" {
   description = "The name of new slb."
-  value       = module.slb.this_slb_name
+  value       = concat(alicloud_slb.this[*].load_balancer_name, [""])[0]
 }
 
 output "this_slb_ip_address" {
   description = "The ip address of new slb."
-  value       = module.slb.this_slb_address
+  value       = concat(alicloud_slb.this[*].address, [""])[0]
 }
 output "this_slb_tags" {
   description = "The tags of new slb."
-  value       = module.slb.this_slb_tags
+  value       = var.slb_tags
 }
 
 #################
