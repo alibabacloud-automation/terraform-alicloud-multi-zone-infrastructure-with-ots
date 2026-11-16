@@ -213,7 +213,7 @@ variable "ecs_image_id" {
 variable "ecs_instance_type" {
   description = "The instance type used to launch one or more ecs instances."
   type        = string
-  default     = "ecs.g7.large"
+  default     = ""
 }
 
 variable "ecs_credit_specification" {

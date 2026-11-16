@@ -1,13 +1,14 @@
 locals {
   create_vpc                    = var.use_existing_vpc ? false : var.create_vpc
   this_vpc_id                   = var.use_existing_vpc ? var.existing_vpc_id : module.vpc.this_vpc_id
-  compatible_zones              = [for zone in data.alicloud_db_zones.default.zones : zone.id if contains(data.alicloud_instance_types.ecs.instance_types[0].availability_zones, zone.id)]
+  compatible_zones              = [for zone in data.alicloud_db_zones.default.zones : zone.id if contains([for ecs_zone in data.alicloud_zones.ecs.zones : ecs_zone.id], zone.id)]
   availability_zones            = length(var.availability_zones) > 0 ? var.availability_zones : slice(local.compatible_zones, 0, 2)
   db_zones_instance_charge_type = var.rds_instance_charge_type == "Postpaid" ? "PostPaid" : (var.rds_instance_charge_type == "Prepaid" ? "PrePaid" : var.rds_instance_charge_type)
 }
 
-data "alicloud_instance_types" "ecs" {
-  instance_type = var.ecs_instance_type
+data "alicloud_zones" "ecs" {
+  available_instance_type     = var.ecs_instance_type != "" ? var.ecs_instance_type : null
+  available_resource_creation = "Instance"
 }
 
 module "vpc" {

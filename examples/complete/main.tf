@@ -16,7 +16,6 @@ module "infrastructure" {
   # create ecs instances in the two zone
   number_of_zone_a_instances = 2
   number_of_zone_b_instances = 2
-  ecs_instance_type          = "ecs.g7.large"
 
   # create a new nat gateway and several eips
   create_nat        = true
