@@ -1,5 +1,5 @@
 provider "alicloud" {
-  region = "cn-hangzhou"
+  region = "cn-shanghai"
 }
 
 module "infrastructure" {
@@ -21,6 +21,7 @@ module "infrastructure" {
   number_of_zone_a_instances = 2
   number_of_zone_b_instances = 2
   ecs_instance_type          = "ecs.g7.large"
+  ecs_system_disk_category   = "cloud_essd"
 
   # create a new nat gateway and several eips
   create_nat        = true
