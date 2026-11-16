@@ -123,13 +123,9 @@ module "security_group" {
 }
 
 data "alicloud_instance_types" "zone_a" {
-  cpu_core_count    = 1
-  memory_size       = 2
   availability_zone = local.availability_zones[0]
 }
 data "alicloud_instance_types" "zone_b" {
-  cpu_core_count    = 1
-  memory_size       = 2
   availability_zone = local.availability_zones[1]
 }
 
