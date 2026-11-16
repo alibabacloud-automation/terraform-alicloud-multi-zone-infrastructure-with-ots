@@ -35,7 +35,7 @@ module "vpc" {
 
 module "nat" {
   source  = "terraform-alicloud-modules/nat-gateway/alicloud"
-  version = "2.0.1"
+  version = "2.0.2"
 
 
   ########################
@@ -220,6 +220,8 @@ data "alicloud_db_instance_classes" "default" {
   zone_id                  = data.alicloud_db_zones.multi.zones[0].id
   engine                   = var.rds_engine
   engine_version           = var.rds_engine_version
+  instance_charge_type     = local.db_zones_instance_charge_type
+  category                 = "HighAvailability"
   db_instance_storage_type = var.rds_instance_storage_type
   multi_zone               = true
 }
