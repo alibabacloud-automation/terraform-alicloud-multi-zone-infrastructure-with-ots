@@ -1,8 +1,13 @@
 locals {
   create_vpc                    = var.use_existing_vpc ? false : var.create_vpc
   this_vpc_id                   = var.use_existing_vpc ? var.existing_vpc_id : module.vpc.this_vpc_id
-  availability_zones            = length(var.availability_zones) > 0 ? var.availability_zones : data.alicloud_db_instance_classes.default.instance_classes[0].zone_ids[0].sub_zone_ids
+  compatible_zones              = [for zone in data.alicloud_db_zones.default.zones : zone.id if contains(data.alicloud_instance_types.ecs.instance_types[0].availability_zones, zone.id)]
+  availability_zones            = length(var.availability_zones) > 0 ? var.availability_zones : slice(local.compatible_zones, 0, 2)
   db_zones_instance_charge_type = var.rds_instance_charge_type == "Postpaid" ? "PostPaid" : (var.rds_instance_charge_type == "Prepaid" ? "PrePaid" : var.rds_instance_charge_type)
+}
+
+data "alicloud_instance_types" "ecs" {
+  instance_type = var.ecs_instance_type
 }
 
 module "vpc" {
@@ -208,12 +213,20 @@ module "slb" {
 }
 
 data "alicloud_db_instance_classes" "default" {
+  zone_id                  = data.alicloud_db_zones.default.zones[0].id
   engine                   = var.rds_engine
   engine_version           = var.rds_engine_version
   instance_charge_type     = local.db_zones_instance_charge_type
   category                 = "HighAvailability"
   db_instance_storage_type = var.rds_instance_storage_type
-  multi_zone               = true
+}
+
+data "alicloud_db_zones" "default" {
+  engine                   = var.rds_engine
+  engine_version           = var.rds_engine_version
+  instance_charge_type     = local.db_zones_instance_charge_type
+  category                 = "HighAvailability"
+  db_instance_storage_type = var.rds_instance_storage_type
 }
 
 module "rds" {
