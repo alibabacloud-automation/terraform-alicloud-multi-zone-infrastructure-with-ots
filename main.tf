@@ -7,7 +7,7 @@ locals {
 }
 
 data "alicloud_zones" "ecs" {
-  available_instance_type     = var.ecs_instance_type != "" ? var.ecs_instance_type : null
+  available_instance_type     = var.ecs_instance_type
   available_resource_creation = "Instance"
 }
 
