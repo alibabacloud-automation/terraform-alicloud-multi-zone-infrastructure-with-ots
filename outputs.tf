@@ -220,7 +220,7 @@ output "this_rds_instance_type" {
 }
 output "this_rds_instance_tags" {
   description = "The tags of new rds instance."
-  value       = module.rds.this_db_instance_tags
+  value       = [for tags in module.rds.this_db_instance_tags : coalesce(tags, tomap({}))]
 }
 
 #################
