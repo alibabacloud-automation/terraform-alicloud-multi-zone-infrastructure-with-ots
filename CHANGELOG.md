@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/alibabacloud-automation/terraform-alicloud-multi-zone-infrastructure-with-ots/compare/v3.0.0...v3.0.1) (2026-11-18)
+
+
+### Bug Fixes
+
+* support Alicloud provider 2.0.0 ([#7](https://github.com/alibabacloud-automation/terraform-alicloud-multi-zone-infrastructure-with-ots/issues/7)) ([44eb969](https://github.com/alibabacloud-automation/terraform-alicloud-multi-zone-infrastructure-with-ots/commit/44eb969072090c5c1d7ab9f970da550c25a62513))
+
 ## [3.0.0](https://github.com/alibabacloud-automation/terraform-alicloud-multi-zone-infrastructure-with-ots/compare/v2.0.0...v3.0.0) (2026-04-22)
 
 
