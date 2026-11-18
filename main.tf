@@ -1,15 +1,14 @@
 locals {
   create_vpc                    = var.use_existing_vpc ? false : var.create_vpc
   this_vpc_id                   = var.use_existing_vpc ? var.existing_vpc_id : module.vpc.this_vpc_id
-  availability_zones            = length(var.availability_zones) > 0 ? var.availability_zones : data.alicloud_db_zones.multi.zones[0].multi_zone_ids
+  compatible_zones              = [for zone in data.alicloud_db_zones.default.zones : zone.id if contains([for ecs_zone in data.alicloud_zones.ecs.zones : ecs_zone.id], zone.id)]
+  availability_zones            = length(var.availability_zones) > 0 ? var.availability_zones : slice(local.compatible_zones, 0, 2)
   db_zones_instance_charge_type = var.rds_instance_charge_type == "Postpaid" ? "PostPaid" : (var.rds_instance_charge_type == "Prepaid" ? "PrePaid" : var.rds_instance_charge_type)
 }
 
-data "alicloud_db_zones" "multi" {
-  engine               = var.rds_engine
-  engine_version       = var.rds_engine_version
-  instance_charge_type = local.db_zones_instance_charge_type
-  multi_zone           = true
+data "alicloud_zones" "ecs" {
+  available_instance_type     = var.ecs_instance_type
+  available_resource_creation = "Instance"
 }
 
 module "vpc" {
@@ -33,7 +32,7 @@ module "vpc" {
 
 module "nat" {
   source  = "terraform-alicloud-modules/nat-gateway/alicloud"
-  version = "2.0.1"
+  version = "2.0.2"
 
 
   ########################
@@ -124,13 +123,9 @@ module "security_group" {
 }
 
 data "alicloud_instance_types" "zone_a" {
-  cpu_core_count    = 1
-  memory_size       = 2
   availability_zone = local.availability_zones[0]
 }
 data "alicloud_instance_types" "zone_b" {
-  cpu_core_count    = 1
-  memory_size       = 2
   availability_zone = local.availability_zones[1]
 }
 
@@ -202,24 +197,33 @@ module "ecs_zone_b" {
   volume_tags                   = var.ecs_volume_tags
 }
 
-module "slb" {
-  source  = "alibaba/slb/alicloud"
-  version = "3.0.1"
+resource "alicloud_slb" "this" {
+  count = var.create_slb ? 1 : 0
 
-  create               = var.create_slb
-  name                 = var.slb_name
+  load_balancer_name   = var.slb_name
+  address_type         = "internet"
   internet_charge_type = var.slb_internet_charge_type
   bandwidth            = var.slb_bandwidth
-  spec                 = var.slb_spec
+  instance_charge_type = var.slb_instance_charge_type
+  load_balancer_spec   = var.slb_instance_charge_type == "PayByCLCU" ? null : (var.slb_spec != "" ? var.slb_spec : null)
   tags                 = var.slb_tags
 }
 
 data "alicloud_db_instance_classes" "default" {
-  zone_id                  = data.alicloud_db_zones.multi.zones[0].id
+  zone_id                  = data.alicloud_db_zones.default.zones[0].id
   engine                   = var.rds_engine
   engine_version           = var.rds_engine_version
+  instance_charge_type     = local.db_zones_instance_charge_type
+  category                 = "HighAvailability"
   db_instance_storage_type = var.rds_instance_storage_type
-  multi_zone               = true
+}
+
+data "alicloud_db_zones" "default" {
+  engine                   = var.rds_engine
+  engine_version           = var.rds_engine_version
+  instance_charge_type     = local.db_zones_instance_charge_type
+  category                 = "HighAvailability"
+  db_instance_storage_type = var.rds_instance_storage_type
 }
 
 module "rds" {
@@ -229,11 +233,12 @@ module "rds" {
   create_instance        = var.create_rds_instance
   engine                 = var.rds_engine
   engine_version         = var.rds_engine_version
+  category               = "HighAvailability"
   instance_name          = var.rds_instance_name
   instance_charge_type   = var.rds_instance_charge_type
   period                 = var.rds_period
   instance_storage_type  = var.rds_instance_storage_type
-  instance_storage       = var.rds_instance_type != "" ? var.rds_instance_storage : data.alicloud_db_instance_classes.default.instance_classes[0].storage_range.min
+  instance_storage       = var.rds_instance_type != "" ? var.rds_instance_storage : data.alicloud_db_instance_classes.default.instance_classes[0].storage_range[0].min
   instance_type          = var.rds_instance_type != "" ? var.rds_instance_type : data.alicloud_db_instance_classes.default.instance_classes[0].instance_class
   vpc_security_group_ids = var.rds_security_group_ids
   vswitch_id             = module.vpc.vswitch_ids[0]

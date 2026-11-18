@@ -1,3 +1,7 @@
+provider "alicloud" {
+  region = "cn-shanghai"
+}
+
 module "infrastructure" {
   source = "../.."
 
@@ -16,7 +20,8 @@ module "infrastructure" {
   # create ecs instances in the two zone
   number_of_zone_a_instances = 2
   number_of_zone_b_instances = 2
-  ecs_instance_type          = "ecs.sn1ne.large"
+  ecs_instance_type          = "ecs.g7.large"
+  ecs_system_disk_category   = "cloud_essd"
 
   # create a new nat gateway and several eips
   create_nat        = true
@@ -27,14 +32,15 @@ module "infrastructure" {
   # create slb
   create_slb    = true
   slb_bandwidth = 10
-  slb_spec      = "slb.s1.small"
+  slb_spec      = ""
 
   # create rds instance
-  create_rds_instance = true
-  rds_engine          = "MySQL"
-  rds_engine_version  = "5.7"
-  rds_account_name    = "tfexamplename"
-  rds_password        = "Example1234"
+  create_rds_instance       = true
+  rds_engine                = "MySQL"
+  rds_engine_version        = "8.0"
+  rds_instance_storage_type = "cloud_essd"
+  rds_account_name          = "tfexamplename"
+  rds_password              = "Example1234"
   rds_databases = [
     {
       name          = "tf_example_db"
