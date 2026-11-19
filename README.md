@@ -24,6 +24,10 @@ These types of resources are supported:
 * [OTS Table](https://github.com/terraform-providers/terraform-provider-alicloud/blob/master/website/docs/r/ots_table.html.markdown)
 
 
+## Breaking change in 4.0.0
+
+Version 4.0.0 requires the Alicloud Provider `aliyun/alicloud >= 2.0.0`. Provider 1.x is no longer supported. Update the `required_providers` constraint and run `terraform init -upgrade` before upgrading.
+
 ## Usage
 
 Create both VPC and Security group.
